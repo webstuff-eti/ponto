@@ -8,8 +8,8 @@ import com.tiagotibaes.ponto.services.EmpresaService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+
 import org.mockito.BDDMockito
-import org.mockito.InjectMocks
 import org.mockito.Mockito
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +25,6 @@ import org.springframework.test.context.ActiveProfiles
 class EmpresaServiceImplTest {
 
     @Autowired
-//    @InjectMocks
     val empresaService: EmpresaService? = null
 
     @MockBean
@@ -54,7 +53,7 @@ class EmpresaServiceImplTest {
     }
 
 
-    private fun empresa(): Empresa = Empresa("1","Razão Social", "41494789000161")
+    private fun empresa(): Empresa = Empresa("1","Razão Social", "41494789000161", "ATIVA")
 
 
 }
