@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.tiagotibaes.ponto.utils.SenhaUtilsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-03-25T15:07:07" hostname="DESKTOP-1DA81OH" time="0.278">
-  <properties/>
-  <testcase name="testeGerarHashSenha()" classname="com.tiagotibaes.ponto.utils.SenhaUtilsTest" time="0.278"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

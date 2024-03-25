@@ -4,7 +4,7 @@ import com.tiagotibaes.ponto.documents.Funcionario
 import com.tiagotibaes.ponto.enums.PerfilEnum
 import com.tiagotibaes.ponto.repositories.FuncionarioRepository
 import com.tiagotibaes.ponto.services.FuncionarioService
-import com.tiagotibaes.ponto.utils.SenhaUtils
+//import com.tiagotibaes.ponto.utils.SenhaUtils
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -71,7 +71,8 @@ class FuncionarioServiceTest {
         Funcionario("1",
             "Tiago",
             "tiago@gmail.com",
-            SenhaUtils().gerarBcrypt("123456"),
+//            SenhaUtils().gerarBcrypt("123456"),
+            "senha",
             "34234855948",
             PerfilEnum.ROLE_USUARIO,
             "1",

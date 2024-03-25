@@ -24,11 +24,17 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-//	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.2.30")
+	//implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+	//TODO: Testando
+//	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.2.30")
+//	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	//TODO: Testando dependência para validar dados nas requisições
+	implementation("org.springframework.boot:spring-boot-starter-validation:2.4.0")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.7.10")
 }
 
