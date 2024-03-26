@@ -1,14 +1,14 @@
 package com.tiagotibaes.ponto.controller.lancamento
 
 
-import com.tiagotibaes.ponto.controller.lancamento.dto.req.LancamentoDtoResquest
-import com.tiagotibaes.ponto.controller.lancamento.dto.resp.LancamentoDtoResponse
+import com.tiagotibaes.ponto.controller.lancamento.dto.LancamentoDtoResquest
+import com.tiagotibaes.ponto.controller.lancamento.dto.LancamentoDtoResponse
 import com.tiagotibaes.ponto.controller.response.GenericsResponse
-import com.tiagotibaes.ponto.documents.Funcionario
 import com.tiagotibaes.ponto.documents.Lancamento
-import com.tiagotibaes.ponto.enums.TypeEnum
-import com.tiagotibaes.ponto.services.FuncionarioService
+
 import com.tiagotibaes.ponto.services.LancamentoService
+import com.tiagotibaes.ponto.services.converters.LancamentoConverter
+import com.tiagotibaes.ponto.services.validates.FuncionarioValidate
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
@@ -27,17 +27,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-import java.text.SimpleDateFormat
-import java.util.*
-
 import javax.validation.Valid
-
 
 
 @RestController
 @RequestMapping("/api/lancamentos")
 class LancamentoController( val lancamentoService: LancamentoService,
-                            val funcionarioService: FuncionarioService) {
+                            val funcionarioValidate: FuncionarioValidate,
+                            val lancamentoConverter: LancamentoConverter) {
 
     @Value("\${paginacao.qtd_por_pagina}")
     val qtdPorPagina: Int = 15
@@ -49,21 +46,19 @@ class LancamentoController( val lancamentoService: LancamentoService,
         //FIXME: Validação do DTO
         val response: GenericsResponse<LancamentoDtoResponse> = GenericsResponse<LancamentoDtoResponse>()
 
-        //FIXME: Validação do funcionário
-        validarFuncionario(lancamentoDtoResquest, result)
+        //TODO: Testar
+        funcionarioValidate.validarFuncionario(lancamentoDtoResquest, result)
 
         //FIXME: Tratamento do erro
         if(result.hasErrors()){
-//            for(erro in result.allErrors) response.erros.add(erro.defaultMessage)
             result.allErrors.forEach { erro -> erro.defaultMessage?.let { response.erros.add(it) } }
             return ResponseEntity.badRequest().body(response)
         }
 
-        val lancamento: Lancamento = converterDtoParaLancamento(lancamentoDtoResquest, result)
-
+        val lancamento: Lancamento = lancamentoConverter.converterDtoParaLancamento(lancamentoDtoResquest, result)
         val lancamentoCreted: Lancamento = lancamentoService.criar(lancamento)
 
-        response.data = converterLancamentoParaDto(lancamentoCreted)
+        response.data = lancamentoConverter.converterLancamentoParaDto(lancamentoCreted)
 
         //TODO: Retornar Status Code correto = 201 - created
         return ResponseEntity.ok(response)
@@ -75,12 +70,13 @@ class LancamentoController( val lancamentoService: LancamentoService,
 
         val response: GenericsResponse<LancamentoDtoResponse> = GenericsResponse<LancamentoDtoResponse>()
 
-        validarFuncionario(lancamentoDtoResquest, result)
+        //TODO: Testar
+        funcionarioValidate.validarFuncionario(lancamentoDtoResquest, result)
         validaLancamentoParaAtualizacao(id, result)
 
         lancamentoDtoResquest.id = id
 
-        val lancamento: Lancamento = converterDtoParaLancamento(lancamentoDtoResquest, result)
+        val lancamento: Lancamento = lancamentoConverter.converterDtoParaLancamento(lancamentoDtoResquest, result)
 
         if (result.hasErrors()) {
             result.allErrors.forEach { erro -> erro.defaultMessage?.let { response.erros.add(it) } }
@@ -88,7 +84,7 @@ class LancamentoController( val lancamentoService: LancamentoService,
         }
 
         val lancamentoCreted: Lancamento = lancamentoService.criar(lancamento)
-        response.data =   converterLancamentoParaDto(lancamentoCreted)
+        response.data = lancamentoConverter.converterLancamentoParaDto(lancamentoCreted)
 
         return ResponseEntity.ok(response)
     }
@@ -138,12 +134,10 @@ class LancamentoController( val lancamentoService: LancamentoService,
             return ResponseEntity.badRequest().body(response)
         }
 
-        response.data = converterLancamentoParaDto(lancamentoSearched)
-
+        response.data = lancamentoConverter.converterLancamentoParaDto(lancamentoSearched)
 
         return ResponseEntity.ok(response)
     }
-
 
     @GetMapping("/funcionario/{funcionarioId}")
     fun listarPorFuncionarioId(@PathVariable("funcionarioId") funcionarioId: String,
@@ -159,80 +153,11 @@ class LancamentoController( val lancamentoService: LancamentoService,
             lancamentoService.buscarPorFuncionarioId(funcionarioId, pageRequest)
 
         val lancamentosDto: Page<LancamentoDtoResponse> =
-            lancamentos.map { lancamento -> converterLancamentoParaDto (lancamento) }
+            lancamentos.map { lancamento -> lancamentoConverter.converterLancamentoParaDto (lancamento) }
 
         response.data = lancamentosDto
         return ResponseEntity.ok(response)
     }
-
-
-
-
-
-    //FIXME: Métodos para validações
-
-    //FIXME: Métodos para validar Funcionário
-    private fun validarFuncionario(lancamentoDtoResquest: LancamentoDtoResquest, result: BindingResult){
-        if(lancamentoDtoResquest.funcionarioId == null){
-            result.addError(ObjectError("funcionário", "Funcionário não informado"))
-            return
-        }
-
-        val funcionario: Funcionario? = funcionarioService.buscarPorId(lancamentoDtoResquest.funcionarioId)
-        if(funcionario == null){
-            result.addError(ObjectError("funcionário", "Funcionário não encontrado. ID inexistente"))
-        }
-    }
-
-
-
-    //FIXME: Métodos para converter Dtos
-    private fun converterDtoParaLancamento(lancamentoDtoRequest: LancamentoDtoResquest,
-                                           result: BindingResult): Lancamento {
-
-        val dataLancamento: Date? = lancamentoDtoRequest.data?.let { converterStringToDate(it) }
-
-        return Lancamento(  lancamentoDtoRequest.id,
-            lancamentoDtoRequest.descricao,
-            lancamentoDtoRequest.localizacao,
-            TypeEnum.valueOf(lancamentoDtoRequest.tipo!!),
-            dataLancamento,
-            lancamentoDtoRequest.funcionarioId!!
-        )
-
-    }
-
-    private fun converterLancamentoParaDto(lancamento: Lancamento) : LancamentoDtoResponse {
-
-        val dataLancamento: String? = lancamento.data?.let {converterDateToString(it)}
-
-        return LancamentoDtoResponse(   lancamento.id,
-            lancamento.descricao,
-            lancamento.localizacao,
-            lancamento.tipo.toString(),
-            dataLancamento,
-            lancamento.funcionarioId
-        )
-
-    }
-
-    //TODO: Mover para o pacote Utils e criar uma classe DataConverterUtils
-    private fun converterStringToDate(testeData: String) : Date {
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")  //dd/MM/yyyy
-        val dateConverted: Date = formatter.parse(testeData)
-
-        return dateConverted;
-    }
-
-
-    //TODO: Mover para o pacote Utils e criar uma classe DataConverterUtils
-    private fun converterDateToString(testeData: Date) : String {
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")  //dd/MM/yyyy
-        val dateConverted: String = formatter.format(testeData)
-
-        return dateConverted;
-    }
-
 
 
 }

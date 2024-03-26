@@ -1,7 +1,6 @@
-package com.tiagotibaes.ponto.controller.lancamento.dto.resp
+package com.tiagotibaes.ponto.controller.lancamento.dto
 
 import javax.validation.constraints.NotEmpty
-
 
 data class LancamentoDtoResponse (
     @get:NotEmpty(message = "Data não pode ser vazia.")

@@ -1,4 +1,4 @@
-package com.tiagotibaes.ponto.controller.lancamento.dto.req
+package com.tiagotibaes.ponto.controller.lancamento.dto
 
 import javax.validation.constraints.NotEmpty
 
