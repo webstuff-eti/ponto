@@ -1,11 +1,11 @@
 package com.tiagotibaes.ponto.controller.funcionario.dto
 
-import com.tiagotibaes.ponto.controller.data.DataUtils
+import com.tiagotibaes.ponto.controller.data.DataUtilsDto
 import org.hibernate.validator.constraints.Length
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 
-data class FuncionarioDtoResponse (
+data class FuncionarioDtoResponse(
 
     val id: String? = null,
     @get:NotEmpty(message = "Nome não pode ser vazio.")
@@ -16,7 +16,7 @@ data class FuncionarioDtoResponse (
     @get:Email(message="Email inválido.")
     val email: String = "",
     val cpf: String,
-    val valorHora : String? = null,
+    val valorHora: String? = null,
     var empresaId: String,
-    var controleHorasFuncionario: DataUtils? = null
+    var controleHorasFuncionario: DataUtilsDto? = null
 )

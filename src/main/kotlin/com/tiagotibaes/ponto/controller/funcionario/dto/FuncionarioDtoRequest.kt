@@ -2,6 +2,7 @@ package com.tiagotibaes.ponto.controller.funcionario.dto
 
 
 import com.tiagotibaes.ponto.controller.data.DataUtils
+import com.tiagotibaes.ponto.controller.data.DataUtilsDto
 
 import org.hibernate.validator.constraints.Length
 import javax.validation.constraints.Email
@@ -20,6 +21,6 @@ data class FuncionarioDtoRequest (
     val cpf: String,
     val valorHora : String? = null,
     val empresaId: String,
-    val controleHorasFuncionario: DataUtils? = null
+    val controleHorasFuncionario: DataUtilsDto? = null
 )
 
