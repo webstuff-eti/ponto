@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.util.Date
 
 
-@Document
+@Document(collection = "lancamentos")
 data class Lancamento(@Id val id: String? = null,
                       val descricao: String? = "",
                       val localizacao: String? = "",

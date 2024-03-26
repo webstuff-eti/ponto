@@ -1,21 +1,22 @@
 package com.tiagotibaes.ponto.services.impl
 
+import com.tiagotibaes.ponto.controller.data.DataUtils
 import com.tiagotibaes.ponto.documents.Funcionario
-import com.tiagotibaes.ponto.enums.PerfilEnum
 import com.tiagotibaes.ponto.repositories.FuncionarioRepository
 import com.tiagotibaes.ponto.services.FuncionarioService
-//import com.tiagotibaes.ponto.utils.SenhaUtils
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.Mockito
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
+
 import java.util.*
 
 @SpringBootTest
@@ -71,13 +72,11 @@ class FuncionarioServiceTest {
         Funcionario("1",
             "Tiago",
             "tiago@gmail.com",
-//            SenhaUtils().gerarBcrypt("123456"),
             "senha",
-            "34234855948",
-            PerfilEnum.ROLE_USUARIO,
+            200.0,
             "1",
-            150.00, 8.30f,
-            1.30f
-        )
+            DataUtils(
+            150.00f, 8.30f)
 
+        )
 }

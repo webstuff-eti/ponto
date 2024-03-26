@@ -9,7 +9,7 @@ import org.springframework.validation.ObjectError
 @Component
 class EmpresaValidate {
 
-    public fun validarEmpresa(empresaDtoResquest: EmpresaDtoResquest, result: BindingResult): BindingResult {
+     fun validarEmpresa(empresaDtoResquest: EmpresaDtoResquest, result: BindingResult): BindingResult {
 
         if(empresaDtoResquest.razaoSocial == null){
             result.addError(ObjectError("empresa", "Razão Social não informado"))

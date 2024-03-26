@@ -1,5 +1,7 @@
 package com.tiagotibaes.ponto.services.validates
 
+import com.tiagotibaes.ponto.controller.empresa.dto.EmpresaDtoResquest
+import com.tiagotibaes.ponto.controller.funcionario.dto.FuncionarioDtoRequest
 import com.tiagotibaes.ponto.controller.lancamento.dto.LancamentoDtoResquest
 import com.tiagotibaes.ponto.documents.Funcionario
 import com.tiagotibaes.ponto.services.FuncionarioService
@@ -20,6 +22,15 @@ class FuncionarioValidate(val funcionarioService: FuncionarioService) {
         if(funcionario == null){
             result.addError(ObjectError("funcionário", "Funcionário não encontrado. ID inexistente"))
         }
+    }
+
+    fun validarDadoFuncionario(funcionarioDtoResquest: FuncionarioDtoRequest, result: BindingResult): BindingResult {
+        if(funcionarioDtoResquest.nome == null){
+            result.addError(ObjectError("funcionario", "Nome do funcionário não informado"))
+        } else if(funcionarioDtoResquest.cpf == null){
+            result.addError(ObjectError("funcionario", "CPF do funcionário não informado"))
+        }
+        return result
     }
 
 }
